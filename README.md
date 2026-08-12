@@ -1,14 +1,14 @@
 # Pepkio Instant Restriction Mapper
 
-Analyze restriction enzyme cut sites, generate restriction maps, simulate virtual digest fragments, and plan molecular cloning strategies in Python and via web interface.
+A high-performance Python package, command-line tool, and web application for restriction enzyme mapping, cleavage site analysis, virtual agarose gel electrophoresis simulation, and restriction digest planning.
 
 # Overview
 
-In molecular biology, genetic engineering, and recombinant DNA technology, restriction endonucleases (restriction enzymes) serve as essential molecular tools for precise DNA cleavage. Restriction mapping involves scanning a double-stranded DNA sequence (such as a plasmid vector, PCR product, synthetic gene, or viral genome) to locate specific recognition sequences, identify cleavage sites, and predict the exact molecular weights and lengths of resulting DNA fragments.
+In molecular biology, genetic engineering, and recombinant DNA technology, restriction endonucleases (restriction enzymes) serve as essential molecular tools for site-specific DNA cleavage. Restriction mapping involves scanning a double-stranded DNA sequence—such as a plasmid vector, PCR product, synthetic gene block, or viral genome—to locate specific recognition motifs, identify cleavage positions, determine overhang chemistry, and predict the exact molecular weights and lengths of resulting DNA fragments.
 
-Accurate restriction mapping is critical for constructing recombinant plasmids, verifying gene insertion orientation, designing molecular cloning schemes (such as traditional restriction-ligation cloning, Gibson Assembly, and Golden Gate Assembly), preparing Restriction Fragment Length Polymorphism (RFLP) assays, and verifying plasmid constructs via diagnostic restriction digests.
+Accurate restriction mapping is critical for constructing recombinant plasmids, verifying gene insertion orientation, designing molecular cloning schemes (such as restriction-ligation cloning, Gibson Assembly, and Golden Gate Assembly), preparing Restriction Fragment Length Polymorphism (RFLP) assays, and confirming plasmid constructs via diagnostic restriction digests.
 
-Manual identification of restriction enzyme recognition sites is error-prone due to palindromic symmetry variations, degenerate nucleotide ambiguity codes (IUPAC bases), overlapping recognition motifs, and differences between circular plasmid topology and linear DNA fragments. Furthermore, manual fragment size calculation across plasmid origin coordinates (the 1 bp mark) frequently leads to incorrect fragment length predictions and mismatched agarose gel band patterns.
+Manual identification of restriction enzyme recognition sites is error-prone due to palindromic symmetry variations, degenerate nucleotide ambiguity codes (IUPAC bases), overlapping recognition motifs, and differences between circular plasmid topology and linear DNA templates. Furthermore, manual fragment size calculation across plasmid origin coordinates (the 1 bp position) frequently leads to incorrect fragment length predictions and mismatched agarose gel band patterns.
 
 The **Pepkio Instant Restriction Mapper** provides a deterministic restriction mapping engine and fragment analysis platform. It scans linear or circular DNA sequences against REBASE-curated restriction endonucleases (Type II, Type IIP, Type IIS, and Type IIT), pinpoints exact 5' and 3' strand cleavage positions, classifies cleavage geometry (5' overhang, 3' overhang, or blunt end), filters by cut frequency (such as unique single cutters or rare cutters), identifies isoschizomers and neoschizomers, and simulates virtual agarose gel electrophoresis band patterns.
 
@@ -30,7 +30,7 @@ Common search terms and alternative terminology for this tool include restrictio
 
 # Common Use Cases
 
-- **Plasmid Vector Mapping & Verification**: Scan circular vector backbones (such as pUC19, pET-28a(+), pCDNA3.1, or pBluescript) to generate restriction maps, identify unique cloning sites within the Multiple Cloning Site (MCS), and verify backbone integrity.
+- **Plasmid Vector Mapping & Verification**: Scan circular vector backbones (such as pUC19, pET-28a(+), pcDNA3.1, or pBluescript) to generate restriction maps, identify unique cloning sites within the Multiple Cloning Site (MCS), and verify backbone integrity.
 - **Recombinant DNA Cloning Strategy Design**: Select compatible restriction enzyme pairs for directional cloning, ensuring that selected enzymes do not cut within the target gene insert while generating compatible cohesive ends in the vector.
 - **Diagnostic Restriction Digest Planning**: Predict expected fragment sizes and agarose gel band patterns for single or double restriction digests to confirm correct gene insertion and orientation following transformation.
 - **Golden Gate & Type IIS Assembly Design**: Map non-palindromic Type IIS restriction sites (e.g., BsaI, BsmBI, SapI) that cut outside their recognition motifs, ensuring proper scarless assembly of multi-part genetic constructs.
@@ -43,7 +43,7 @@ General sequence text editors, basic spreadsheet formulas (Excel, Google Sheets)
 
 Manual restriction site searching is tedious and prone to errors when dealing with degenerate IUPAC nucleotide codes (e.g., $R = A/G, Y = C/T, N = A/C/G/T$), non-palindromic recognition sequences, or enzymes with cleavage sites located outside their recognition motifs (Type IIS enzymes). In addition, manual calculations often fail to identify isoschizomers (enzymes sharing identical recognition motifs) or neoschizomers (enzymes recognizing identical motifs but cutting at different positions), leading to unexpected overhang configurations during ligation.
 
-Legacy desktop software applications often require local software installation, outdated runtime dependencies, or commercial license fees. Pepkio Instant Restriction Mapper provides a zero-installation web interface and programmatic API that delivers restriction map generation, virtual gel visualization, and reproducible data sharing.
+Legacy desktop software applications often require local software installation, outdated runtime dependencies, or commercial license fees. Pepkio Instant Restriction Mapper provides a web interface and programmatic API that delivers restriction map generation, virtual gel visualization, and reproducible data sharing.
 
 # Installation
 
@@ -78,7 +78,7 @@ from pepkio_instant_restriction_mapper import PepkioClient, RestrictionMapperInp
 
 # Initialize client
 with PepkioClient() as client:
-    # 1. Analyze circular plasmid sequence for unique restriction cutters
+    # Analyze circular plasmid sequence for unique restriction cutters
     mapper_input = RestrictionMapperInput(
         sequence="AGCTTGGCACTGGCCGTCTTTTACAACGTCGTGACTGGGAAAACCCTGGCGTTACCCAACTTAATCGCCTTGCAGCACATCCCCCTTTCGCCAGCTGGCGTAATAGCGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGCAGCCTGAATGGCGAATGGCGCTTTGCCTGGTTTCCGGCACCAGAAGCGGTGCCGGAAAGCTGGCTGGAGTGCGATCTTCCTGAGGCCGATACTGTCGTCGTCCCCTCAAACTGGCAGATGCACGGTTACGATGCGCCCATCTACACCAACGTAACCTATCCCATTACGGTCAATCCGCCGTTTGTTCCCACGGAGAATCCGACGGGTTGTTACTCGCTCACATTTAATGTTGATGAAAGCTGGCTACAGGAAGGCCAGACGCGAATTATTTTTGATGGCGTTCCTATTGGTTAAA",
         sequence_name="pUC19_mini_region",
@@ -93,12 +93,12 @@ with PepkioClient() as client:
     print("Run Status:", result.status)
     print("Permalink:", result.permalink)
     
-    # Access map results
+    # Access restriction map results
     if result.result:
         sites = result.result.get("sites", [])
         print(f"Found {len(sites)} unique restriction sites:")
         for site in sites:
-            print(f"- {site['enzyme']}: Cut Position {site['position']}, Recognition: {site['pattern']}")
+            print(f"- {site['enzyme']}: Cut Position {site['cut_positions']}, Pattern: {site['pattern']}")
 ```
 
 ### Command-Line Interface (CLI) Usage
@@ -184,7 +184,7 @@ Below is a representative JSON response object returned by the restriction mappi
 
 ### Restriction Endonucleases & Recognition Mechanisms
 
-Restriction endonucleases are bacterial enzymes that recognize specific double-stranded DNA sequences and catalyze the cleavage of phosphodiester bonds on both strands. In nature, restriction-modification (R-M) systems protect bacteria against invading bacteriophage DNA by cleaving unmethylated viral genomes while host genomic DNA is protected by site-specific DNA methyltransferases.
+Restriction endonucleases are bacterial enzymes that recognize specific double-stranded DNA sequences and catalyze the cleavage of phosphodiester bonds on both strands. In nature, restriction-modification (R-M) systems protect host bacteria against invading bacteriophage DNA by cleaving unmethylated viral genomes while host genomic DNA is protected by site-specific DNA methyltransferases.
 
 Type II restriction enzymes are the primary class used in recombinant DNA technology. They typically recognize short palindromic sequences (4 to 8 base pairs in length) and cleave within or adjacent to their recognition motifs without requiring ATP hydrolysis.
 
@@ -202,7 +202,7 @@ Thus, the expected average distance $E(L)$ between cut sites for a 4-bp, 6-bp, o
 - **6-bp cutter** (e.g., EcoRI, BamHI): \( E(L) = 4^6 = 4,096 \text{ bp} \)
 - **8-bp cutter** (e.g., NotI, PacI): \( E(L) = 4^8 = 65,536 \text{ bp} \)
 
-When template DNA exhibits GC-bias ($f_G + f_C = f_{GC}$), the site probability $P(s)$ for a recognition motif $s$ containing $N_{GC}$ GC pairs and $N_{AT}$ AT pairs is adjusted:
+When template DNA exhibits GC-bias ($f_{GC} = f_G + f_C$), the site probability $P(s)$ for a recognition motif $s$ containing $N_{GC}$ GC pairs and $N_{AT}$ AT pairs is adjusted:
 
 \[
 P(s) = \left(\frac{f_{GC}}{2}\right)^{N_{GC}} \times \left(\frac{1 - f_{GC}}{2}\right)^{N_{AT}}
@@ -246,13 +246,13 @@ For a linear DNA molecule of total length $L$ bp cut at $N$ positions $p_1 < p_2
 
 - **Isoschizomers**: Restriction enzymes isolated from different bacterial species that recognize the identical DNA sequence and cleave at the exact same position (e.g., SphI and BbuI both recognize `GCATG^C`).
 - **Neoschizomers**: Restriction enzymes that recognize the identical DNA sequence but cleave at different positions within the motif, producing different overhang geometries (e.g., SmaI recognizes `CCC^GGG` producing blunt ends, whereas XmaI recognizes `C^CCGGG` producing 5' cohesive ends).
-- **Isocaudomers**: Restriction enzymes that recognize different sequences but generate identical cohesive overhangs, allowing incompatible restriction sites to be ligated together (e.g., BamHI `G^GATCC` and XhoI/SalI/MboI derivatives).
+- **Isocaudomers**: Restriction enzymes that recognize different sequences but generate identical cohesive overhangs, allowing incompatible restriction sites to be ligated together (e.g., BamHI `G^GATCC` and BglII `A^GATCT` both yield `GATC` 5' overhangs).
 
 ### DNA Methylation Sensitivity
 
 Bacterial host strains frequently express DNA methyltransferases (such as Dam methylase, Dcm methylase, or CpG methylases in mammalian systems) that modify specific cytosine or adenine residues:
 
-- **Dam Methylation**: Methylates adenine in `GAmTC` sequences. Enzymes whose recognition sites overlap Dam methylation (e.g., ClaI, MboI, XbaI under specific context) can be blocked from cutting.
+- **Dam Methylation**: Methylates adenine in `GAmTC` sequences. Enzymes whose recognition sites overlap Dam methylation (e.g., ClaI, MboI, XbaI under specific sequence context) can be blocked from cutting.
 - **Dcm Methylation**: Methylates internal cytosine in `CCWGG` sequences ($W = A \text{ or } T$). Enzymes such as AvaII or EcoRII may be inhibited when plasmid DNA is isolated from $dcm^+$ E. coli strains (e.g., DH5$\alpha$, TOP10).
 - **CpG Methylation**: Methylates cytosines in `CG` dinucleotides in eukaryotic DNA, blocking enzymes such as NotI, PstI, and XhoI.
 
@@ -269,7 +269,7 @@ where $d$ is migration distance, and $a$ and $b$ are gel-specific constants dete
 # Frequently Asked Questions
 
 ### What is a restriction map?
-A restriction map is a structural map of a DNA molecule (plasmid, PCR product, or chromosome) that indicates the precise linear or circular positions of restriction enzyme recognition sites and cut locations.
+A restriction map is a structural map of a DNA molecule (plasmid, PCR product, or chromosome) that indicates the precise linear or circular positions of restriction enzyme recognition sites and cleavage locations.
 
 ### How does a restriction enzyme identify cut sites?
 Restriction enzymes scan double-stranded DNA via 3D diffusion and 1D sliding along the phosphodiester backbone until encountering their specific recognition motif, where conformational binding induces phosphodiester bond hydrolysis.
@@ -286,7 +286,7 @@ Isoschizomers are different enzymes that recognize the same sequence and cut at 
 ### What is the difference between sticky ends and blunt ends?
 Sticky (cohesive) ends have single-stranded 5' or 3' overhangs that facilitate complementary base-pairing during ligation. Blunt ends have fully paired double-stranded termini with no single-stranded overhangs.
 
-### How does Dam and Dcm methylation affect restriction digestion?
+### How do Dam and Dcm methylation affect restriction digestion?
 Dam and Dcm methyltransferases add methyl groups to specific adenine (`GAmTC`) or cytosine (`CCWGG`) bases in E. coli. If a restriction site overlaps a methylated base, enzyme cleavage may be partially or completely inhibited.
 
 ### What is star activity in restriction enzyme digests?
@@ -304,8 +304,17 @@ In a random sequence with equal base proportions ($50\% \text{ GC}$), a 6-bp cut
 ### Why are unique cutters important in plasmid cloning?
 Unique cutters cleave a plasmid vector at exactly one position, linearizing the plasmid without removing essential backbone elements or cutting the vector into multiple disassociated fragments.
 
-### How do I calculate enzyme volumes for a restriction digest reaction ($C_1 V_1 = C_2 V_2$)?
-Use the dilution formula $C_1 V_1 = C_2 V_2$ to calculate required volumes of $10\times$ restriction buffer, DNA template, enzyme units (typically 5–10 units per $\mu\text{g}$ DNA), and nuclease-free water to achieve desired final concentrations.
+### What is C1V1=C2V2 and how is it used in restriction digest calculations?
+The equation $C_1 V_1 = C_2 V_2$ represents the principle of conservation of mass in solution dilutions. In restriction digest preparations, it is used to calculate the necessary stock volumes ($V_1$) of $10\times$ digest buffer, DNA template, and enzyme units needed to achieve target final working concentrations ($C_2$) in a total reaction volume ($V_2$).
+
+### What is serial dilution and how do I calculate a dilution factor?
+Serial dilution is a step-by-step dilution of a substance in solution, where the dilution factor at each step is the ratio of final volume to initial transferred volume ($DF = V_{\text{final}} / V_{\text{initial}}$). The total dilution factor across a series is the product of individual step dilution factors.
+
+### How do I prepare a standard curve for quantitative DNA analysis?
+A standard curve is prepared by performing a serial dilution of a known DNA concentration standard, measuring signal responses (such as fluorescence or qPCR $C_q$ values), and fitting a linear regression of response versus logarithmic concentration.
+
+### How do I design a dilution series for qPCR and restriction digest normalization?
+Design a serial dilution (e.g., 1:5 or 1:10) across 5-7 points using nuclease-free water or buffer to establish a dynamic quantification range. Normalize DNA concentrations using $C_1 V_1 = C_2 V_2$ before restriction digestion to maintain consistent enzyme-to-substrate ratios.
 
 ### What is the difference between Type II and Type IIS restriction enzymes?
 Type II restriction enzymes recognize palindromic sequences and cut inside the recognition site. Type IIS restriction enzymes recognize asymmetric sequences and cleave DNA at a specified distance outside the recognition motif.
@@ -323,7 +332,7 @@ The hosted version of the tool is accessible at:
 Web Application:
 https://www.pepkio.com/tools/instant-restriction-mapper
 
-The web version provides an interactive interface, shareable links, protocol generation, printable worksheets, and visualization tools. It allows researchers to upload FASTA or GenBank sequence files, interactively filter enzyme lists by cut frequency, toggle virtual agarose gel electrophoresis simulations, and export publication-ready restriction maps.
+The web version provides an interactive interface, shareable links, protocol generation, printable worksheets, and visualization tools. It allows researchers to upload FASTA sequence files, interactively filter enzyme lists by cut frequency, toggle virtual agarose gel electrophoresis simulations, and export publication-ready restriction maps.
 
 # Related Resources
 
@@ -375,6 +384,6 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 # Keywords
 
-pepkio-instant-restriction-mapper, instant restriction mapper, restriction map generator, restriction enzyme finder, plasmid restriction mapper, DNA restriction site analyzer, restriction digest simulator, virtual gel electrophoresis simulator, REBASE restriction enzyme search, unique cutter finder, isoschizomer finder, restriction fragment size calculator, double digest planner, plasmid cleavage site mapper, molecular cloning restriction analyzer, EcoRI cut site finder, BamHI restriction map, HindIII cleavage site, Type II restriction enzyme analyzer, Type IIS restriction enzyme mapper, Golden Gate assembly restriction planner, Gibson assembly restriction checker, 5 prime sticky end calculator, 3 prime sticky end calculator, blunt end restriction enzyme finder, Dam methylation restriction sensitivity, Dcm methylation restriction sensitivity, CpG methylation restriction blocking, circular DNA fragment size calculator, linear DNA digest simulator, restriction fragment length polymorphism RFLP analyzer, plasmid vector multiple cloning site mapper, pUC19 restriction map, pET28a restriction map, pCDNA31 restriction map, single cutter plasmid finder, rare cutter restriction enzyme, restriction endonuclease cleavage calculator, degenerate IUPAC restriction site search, restriction digest band pattern generator, agarose gel band mobility simulator, DNA restriction mapping Python library, restriction enzyme API client, bioinformatics restriction enzyme toolkit
+pepkio-instant-restriction-mapper, instant restriction mapper, restriction map generator, restriction enzyme finder, plasmid restriction mapper, DNA restriction site analyzer, restriction digest simulator, virtual gel electrophoresis simulator, REBASE restriction enzyme search, unique cutter finder, isoschizomer finder, restriction fragment size calculator, double digest planner, plasmid cleavage site mapper, molecular cloning restriction analyzer, EcoRI cut site finder, BamHI restriction map, HindIII cleavage site, Type II restriction enzyme analyzer, Type IIS restriction enzyme mapper, Golden Gate assembly restriction planner, Gibson assembly restriction checker, 5 prime sticky end calculator, 3 prime sticky end calculator, blunt end restriction enzyme finder, Dam methylation restriction sensitivity, Dcm methylation restriction sensitivity, CpG methylation restriction blocking, circular DNA fragment size calculator, linear DNA digest simulator, restriction fragment length polymorphism RFLP analyzer, plasmid vector multiple cloning site mapper, pUC19 restriction map, pET28a restriction map, pcDNA31 restriction map, single cutter plasmid finder, rare cutter restriction enzyme, restriction endonuclease cleavage calculator, degenerate IUPAC restriction site search, restriction digest band pattern generator, agarose gel band mobility simulator, DNA restriction mapping Python library, restriction enzyme API client, bioinformatics restriction enzyme toolkit, serial dilution calculator, C1V1=C2V2 digest formula calculator, standard curve qPCR dilution planner
 
-instant restriction mapper online calculator, how to generate a restriction map for plasmid DNA, calculate DNA fragment sizes after double restriction digest, find unique restriction cut sites in plasmid vector, simulate agarose gel electrophoresis band patterns online, restriction enzyme recognition site finder for FASTA sequence, plasmid circular topology restriction fragment calculation formula, difference between circular and linear DNA restriction digestion fragments, how Dam and Dcm methylation blocks restriction enzyme cleavage, Type IIS restriction enzyme mapping for Golden Gate cloning, how to choose compatible restriction enzymes for directional cloning, find isoschizomers and neoschizomers for EcoRI and BamHI, calculate expected restriction site frequency in GC rich DNA, Python REST API client for REBASE restriction enzyme search, interactive restriction mapping tool for molecular biology labs
+instant restriction mapper online calculator, how to generate a restriction map for plasmid DNA, calculate DNA fragment sizes after double restriction digest, find unique restriction cut sites in plasmid vector, simulate agarose gel electrophoresis band patterns online, restriction enzyme recognition site finder for FASTA sequence, plasmid circular topology restriction fragment calculation formula, difference between circular and linear DNA restriction digestion fragments, how Dam and Dcm methylation blocks restriction enzyme cleavage, Type IIS restriction enzyme mapping for Golden Gate cloning, how to choose compatible restriction enzymes for directional cloning, find isoschizomers and neoschizomers for EcoRI and BamHI, calculate expected restriction site frequency in GC rich DNA, Python REST API client for REBASE restriction enzyme search, interactive restriction mapping tool for molecular biology labs, how to calculate C1V1=C2V2 for restriction digest reaction mix, how to design a serial dilution series for DNA standard curves, qPCR serial dilution factor calculation formula, plasmid origin wrapping fragment size calculation
