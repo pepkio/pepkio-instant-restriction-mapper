@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Typed API request/response models for Pepkio instant-restriction-mapper."""
 
 from __future__ import annotations

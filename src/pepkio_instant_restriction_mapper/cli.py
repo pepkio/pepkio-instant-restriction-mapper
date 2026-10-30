@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Command-line interface for pepkio-instant-restriction-mapper."""
 
 from __future__ import annotations

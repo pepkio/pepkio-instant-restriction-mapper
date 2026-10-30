@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """HTTP client for the Pepkio instant-restriction-mapper tool."""
 
 from __future__ import annotations

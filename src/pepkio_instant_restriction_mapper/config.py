@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Configuration and environment resolution for Pepkio instant-restriction-mapper."""
 
 from __future__ import annotations
